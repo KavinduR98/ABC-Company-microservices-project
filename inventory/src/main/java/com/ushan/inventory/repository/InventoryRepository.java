@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
-    @Query(value = "SELECT * FROM Inventory WHERE id= ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Inventory WHERE item_id= ?1", nativeQuery = true)
     Inventory getItemById(Integer itemId);
 
 }
