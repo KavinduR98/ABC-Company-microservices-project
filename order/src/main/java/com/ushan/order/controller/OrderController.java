@@ -1,7 +1,9 @@
 package com.ushan.order.controller;
 
+import com.ushan.base.dto.OrderEventDTO;
 import com.ushan.order.common.OrderResponse;
 import com.ushan.order.dto.OrderDTO;
+import com.ushan.order.kafka.OrderProducer;
 import com.ushan.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderProducer orderProducer;
+
     @GetMapping(path = "/test")
     public String test(){
         return "This is an Order service!";
@@ -28,6 +33,11 @@ public class OrderController {
 
     @PostMapping(path = "/save_order")
     public OrderResponse saveOrder(@RequestBody OrderDTO orderDTO){
+        OrderEventDTO orderEventDTO = new OrderEventDTO();
+        orderEventDTO.setMessage("Order is commited!");
+        orderEventDTO.setStatus("pending");
+        orderProducer.sendMessage(orderEventDTO);
+
         return orderService.saveOrder(orderDTO);
     }
 
